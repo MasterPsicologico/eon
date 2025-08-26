@@ -1,0 +1,534 @@
+//@version=4
+strategy("Estrategia de Media Móvil", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil
+length = input(14, title="Longitud de la Media Móvil")
+src = input(close, title="Fuente de Datos")
+
+// Calcula la Media Móvil
+ma = sma(src, length)
+
+// Condiciones de entrada y salida
+longCondition = close > ma and close[1] <= ma
+shortCondition = close < ma and close[1] >= ma
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Líneas de plot para visualización en el gráfico
+plot(ma, color=color.blue, title="Media Móvil")
+hline(0, "Zero Line", color=color.gray)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rentabilidad del 22%
+//@version=4
+strategy("Estrategia de Media Móvil Mejorada", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil
+length = input(14, title="Longitud de la Media Móvil")
+src = input(close, title="Fuente de Datos")
+
+// Parámetros de gestión de riesgos
+riskPercent = input(1, title="Riesgo por Operación (%)") / 100
+atrLength = input(14, title="ATR Longitud")
+atrMultiplier = input(1, title="ATR Multiplicador")
+
+// Calcula la Media Móvil
+ma = sma(src, length)
+
+// Calcula el ATR para gestionar el riesgo
+atr = atr(atrLength)
+riskPerTrade = atr * atrMultiplier
+
+// Condiciones de entrada y salida
+longCondition = close > ma and close[1] <= ma
+shortCondition = close < ma and close[1] >= ma
+exitLongCondition = close < ma and close[1] >= ma
+exitShortCondition = close > ma and close[1] <= ma
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Salidas de la estrategia
+strategy.exit("ExitLong", from_entry="Long", when=exitLongCondition)
+strategy.exit("ExitShort", from_entry="Short", when=exitShortCondition)
+
+// Líneas de plot para visualización en el gráfico
+plot(ma, color=color.blue, title="Media Móvil")
+hline(0, "Zero Line", color=color.gray)
+
+// Etiquetas de riesgo
+riskLabel = riskPerTrade * syminfo.mintick
+plotshape(series=riskLabel, title="Riesgo por Operación", color=color.red, style=shape.labelup, location=location.abovebar)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Me gusta muchoooo, rentabilidad del 35.37%
+//@version=4
+strategy("Estrategia Mejorada de Media Móvil", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil corta
+shortLength = input(14, title="Longitud de la Media Móvil Corta")
+shortMA = sma(close, shortLength)
+
+// Parámetros de la Media Móvil larga (Filtro de tendencia)
+longLength = input(50, title="Longitud de la Media Móvil Larga")
+longMA = sma(close, longLength)
+
+// Parámetros de la estrategia
+stopLossPct = input(1, title="Stop Loss (%)") / 100
+takeProfitPct = input(2, title="Take Profit (%)") / 100
+
+// Condiciones de entrada y salida
+longCondition = crossover(shortMA, longMA) and close > shortMA
+shortCondition = crossunder(shortMA, longMA) and close < shortMA
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Stop Loss y Take Profit
+strategy.exit("Take Profit/Stop Loss", from_entry="Long", loss=close * stopLossPct, profit=close * takeProfitPct)
+strategy.exit("Take Profit/Stop Loss", from_entry="Short", loss=close * stopLossPct, profit=close * takeProfitPct)
+
+// Líneas de plot para visualización en el gráfico
+plot(shortMA, color=color.blue, title="Media Móvil Corta")
+plot(longMA, color=color.red, title="Media Móvil Larga")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+me gusta masss 38.4%
+//@version=4
+strategy("Estrategia Mejorada", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil corta
+shortLength = input(14, title="Longitud de la Media Móvil Corta")
+shortMA = sma(close, shortLength)
+
+// Parámetros de la Media Móvil larga (Filtro de tendencia)
+longLength = input(50, title="Longitud de la Media Móvil Larga")
+longMA = sma(close, longLength)
+
+// Filtro de volatilidad con ATR
+atrLength = input(14, title="ATR Longitud")
+atrMultiplier = input(1.5, title="ATR Multiplicador")
+volatilityFilter = atr(atrLength) * atrMultiplier
+
+// Condiciones de entrada y salida
+longCondition = crossover(shortMA, longMA) and close > shortMA and close > (shortMA + volatilityFilter)
+shortCondition = crossunder(shortMA, longMA) and close < shortMA and close < (shortMA - volatilityFilter)
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Stop Loss y Take Profit
+stopLossPct = input(1, title="Stop Loss (%)") / 100
+takeProfitPct = input(2, title="Take Profit (%)") / 100
+strategy.exit("Take Profit/Stop Loss", from_entry="Long", loss=close * stopLossPct, profit=close * takeProfitPct)
+strategy.exit("Take Profit/Stop Loss", from_entry="Short", loss=close * stopLossPct, profit=close * takeProfitPct)
+
+// Líneas de plot para visualización en el gráfico
+plot(shortMA, color=color.blue, title="Media Móvil Corta")
+plot(longMA, color=color.red, title="Media Móvil Larga")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+aun masss 39.4%
+//@version=4
+strategy("Estrategia Mejorada", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil corta
+shortLength = input(14, title="Longitud de la Media Móvil Corta")
+shortMA = sma(close, shortLength)
+
+// Parámetros de la Media Móvil larga (Filtro de tendencia)
+longLength = input(50, title="Longitud de la Media Móvil Larga")
+longMA = sma(close, longLength)
+
+// Filtro de volatilidad con ATR
+atrLength = input(14, title="ATR Longitud")
+atrMultiplier = input(1.5, title="ATR Multiplicador")
+volatilityFilter = atr(atrLength) * atrMultiplier
+
+// Bandas de Bollinger
+bollingerLength = input(20, title="Longitud de Bollinger")
+bollingerMultiplier = input(2, title="Multiplicador de Bollinger")
+upperBand = sma(close, bollingerLength) + bollingerMultiplier * stdev(close, bollingerLength)
+lowerBand = sma(close, bollingerLength) - bollingerMultiplier * stdev(close, bollingerLength)
+
+// MACD como confirmación de tendencia
+[macdLine, signalLine, _] = macd(close, 12, 26, 9)
+macdHist = macdLine - signalLine
+
+// Condiciones de entrada y salida
+longCondition = crossover(shortMA, longMA) and close > shortMA and close > (shortMA + volatilityFilter) and close > upperBand and macdHist > 0
+shortCondition = crossunder(shortMA, longMA) and close < shortMA and close < (shortMA - volatilityFilter) and close < lowerBand and macdHist < 0
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Stop Loss y Take Profit
+stopLossPct = input(1, title="Stop Loss (%)") / 100
+takeProfitPct = input(2, title="Take Profit (%)") / 100
+strategy.exit("Take Profit/Stop Loss", from_entry="Long", loss=close * stopLossPct, profit=close * takeProfitPct)
+strategy.exit("Take Profit/Stop Loss", from_entry="Short", loss=close * stopLossPct, profit=close * takeProfitPct)
+
+// Líneas de plot para visualización en el gráfico
+plot(shortMA, color=color.blue, title="Media Móvil Corta")
+plot(longMA, color=color.red, title="Media Móvil Larga")
+plot(upperBand, color=color.green, title="Banda Superior")
+plot(lowerBand, color=color.red, title="Banda Inferior")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+me super encsntssss 39.71
+//@version=4
+strategy("Estrategia Mejorada", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil corta
+shortLength = input(14, title="Longitud de la Media Móvil Corta")
+shortMA = sma(close, shortLength)
+
+// Parámetros de la Media Móvil larga (Filtro de tendencia)
+longLength = input(50, title="Longitud de la Media Móvil Larga")
+longMA = sma(close, longLength)
+
+// Filtro de tendencia con RSI
+rsiLength = input(14, title="Longitud del RSI")
+rsiLevel = input(50, title="Nivel del RSI")
+trendFilter = rsi(close, rsiLength) > rsiLevel
+
+// Filtro de volatilidad con ATR
+atrLength = input(14, title="ATR Longitud")
+atrMultiplier = input(1.5, title="ATR Multiplicador")
+volatilityFilter = atr(atrLength) * atrMultiplier
+
+// Condiciones de entrada y salida
+longCondition = crossover(shortMA, longMA) and close > shortMA and trendFilter and close > (shortMA + volatilityFilter)
+shortCondition = crossunder(shortMA, longMA) and close < shortMA and trendFilter and close < (shortMA - volatilityFilter)
+
+// Tamaño de posición dinámico basado en volatilidad
+positionSize = input(1, title="Tamaño de posición (porcentual)")
+riskPerTrade = input(1, title="Riesgo por operación (%)") / 100
+equityPerTrade = strategy.equity * riskPerTrade
+tradeRisk = close - close[1]
+tradeVolatility = atr(atrLength)
+tradeSize = equityPerTrade / (tradeRisk / tradeVolatility)
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Stop Loss y Take Profit
+stopLossPct = input(1, title="Stop Loss (%)") / 100
+takeProfitPct = input(2, title="Take Profit (%)") / 100
+strategy.exit("Take Profit/Stop Loss", from_entry="Long", loss=close * stopLossPct, profit=close * takeProfitPct)
+strategy.exit("Take Profit/Stop Loss", from_entry="Short", loss=close * stopLossPct, profit=close * takeProfitPct)
+
+// Líneas de plot para visualización en el gráfico
+plot(shortMA, color=color.blue, title="Media Móvil Corta")
+plot(longMA, color=color.red, title="Media Móvil Larga")
+
+
+
+
+
+
+
+
+
+
+
+nada mal 38.4%
+//@version=4
+strategy("Estrategia Mejorada", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil corta
+shortLength = input(14, title="Longitud de la Media Móvil Corta")
+shortMA = sma(close, shortLength)
+
+// Parámetros de la Media Móvil larga (Filtro de tendencia)
+longLength = input(50, title="Longitud de la Media Móvil Larga")
+longMA = sma(close, longLength)
+
+// Filtro de volatilidad con ATR
+atrLength = input(14, title="ATR Longitud")
+atrMultiplier = input(1.5, title="ATR Multiplicador")
+volatilityFilter = atr(atrLength) * atrMultiplier
+
+// Condiciones de entrada y salida
+longCondition = crossover(shortMA, longMA) and close > shortMA and close > (shortMA + volatilityFilter)
+shortCondition = crossunder(shortMA, longMA) and close < shortMA and close < (shortMA - volatilityFilter)
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Stop Loss y Take Profit
+stopLossPct = input(1, title="Stop Loss (%)") / 100
+takeProfitPct = input(2, title="Take Profit (%)") / 100
+strategy.exit("Take Profit/Stop Loss", from_entry="Long", loss=close * stopLossPct, profit=close * takeProfitPct)
+strategy.exit("Take Profit/Stop Loss", from_entry="Short", loss=close * stopLossPct, profit=close * takeProfitPct)
+
+// Añadir una condición de salida basada en cruce de medias móviles
+exitCondition = crossover(shortMA, longMA) or crossunder(shortMA, longMA)
+strategy.close("Long", when=exitCondition)
+strategy.close("Short", when=exitCondition)
+
+// Líneas de plot para visualización en el gráfico
+plot(shortMA, color=color.blue, title="Media Móvil Corta")
+plot(longMA, color=color.red, title="Media Móvil Larga")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+me asombra, 64.29% 
+//@version=4
+strategy("Estrategia Mejorada", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil corta
+shortLength = input(14, title="Longitud de la Media Móvil Corta")
+shortMA = sma(close, shortLength)
+
+// Parámetros de la Media Móvil larga (Filtro de tendencia)
+longLength = input(50, title="Longitud de la Media Móvil Larga")
+longMA = sma(close, longLength)
+
+// Filtro de tendencia con RSI
+rsiLength = input(14, title="Longitud del RSI")
+rsiLevel = input(50, title="Nivel del RSI")
+trendFilter = rsi(close, rsiLength) > rsiLevel
+
+// Filtro de volatilidad con ATR
+atrLength = input(14, title="ATR Longitud")
+atrMultiplier = input(1.5, title="ATR Multiplicador")
+volatilityFilter = atr(atrLength) * atrMultiplier
+
+// Condiciones de entrada y salida
+longCondition = crossover(shortMA, longMA) and close > shortMA and trendFilter and close > (shortMA + volatilityFilter)
+shortCondition = crossunder(shortMA, longMA) and close < shortMA and trendFilter and close < (shortMA - volatilityFilter)
+
+// Tamaño de posición dinámico basado en volatilidad
+riskPerTrade = input(1, title="Riesgo por operación (%)") / 100
+equityPerTrade = strategy.equity * riskPerTrade
+tradeRisk = close - close[1]
+tradeVolatility = atr(atrLength)
+tradeSize = equityPerTrade / (tradeRisk / tradeVolatility)
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Stop Loss y Take Profit
+stopLossPct = input(1, title="Stop Loss (%)") / 100
+takeProfitPct = input(2, title="Take Profit (%)") / 100
+strategy.exit("Take Profit/Stop Loss", from_entry="Long", loss=close - close * stopLossPct, profit=close + close * takeProfitPct)
+strategy.exit("Take Profit/Stop Loss", from_entry="Short", loss=close + close * stopLossPct, profit=close - close * takeProfitPct)
+
+// Líneas de plot para visualización en el gráfico
+plot(shortMA, color=color.blue, title="Media Móvil Corta")
+plot(longMA, color=color.red, title="Media Móvil Larga")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+interesante 41.8%
+//@version=4
+strategy("Estrategia Mejorada", shorttitle="MM Estrategia", overlay=true)
+
+// Parámetros de la Media Móvil corta
+shortLength = input(14, title="Longitud de la Media Móvil Corta")
+shortMA = sma(close, shortLength)
+
+// Parámetros de la Media Móvil larga (Filtro de tendencia)
+longLength = input(50, title="Longitud de la Media Móvil Larga")
+longMA = sma(close, longLength)
+
+// Filtro de tendencia con RSI
+rsiLength = input(14, title="Longitud del RSI")
+rsiLevel = input(50, title="Nivel del RSI")
+trendFilter = rsi(close, rsiLength) > rsiLevel
+
+// Filtro de volatilidad con ATR
+atrLength = input(14, title="ATR Longitud")
+atrMultiplier = input(1.5, title="ATR Multiplicador")
+volatilityFilter = atr(atrLength) * atrMultiplier
+
+// Condiciones de entrada y salida
+longCondition = crossover(shortMA, longMA) and close > shortMA and trendFilter and close > (shortMA + volatilityFilter)
+shortCondition = crossunder(shortMA, longMA) and close < shortMA and trendFilter and close < (shortMA - volatilityFilter)
+
+// Tamaño de posición dinámico basado en volatilidad
+positionSize = input(1, title="Tamaño de posición (porcentual)")
+riskPerTrade = input(1, title="Riesgo por operación (%)") / 100
+equityPerTrade = strategy.equity * riskPerTrade
+tradeRisk = close - close[1]
+tradeVolatility = atr(atrLength)
+tradeSize = equityPerTrade / (tradeRisk / tradeVolatility)
+
+// Estrategia de trading
+strategy.entry("Long", strategy.long, when=longCondition)
+strategy.entry("Short", strategy.short, when=shortCondition)
+
+// Stop Loss y Take Profit
+stopLossPct = input(1, title="Stop Loss (%)") / 100
+takeProfitPct = input(2, title="Take Profit (%)") / 100
+strategy.exit("Take Profit/Stop Loss", from_entry="Long", loss=close * stopLossPct, profit=close * takeProfitPct)
+strategy.exit("Take Profit/Stop Loss", from_entry="Short", loss=close * stopLossPct, profit=close * takeProfitPct)
+
+// Líneas de plot para visualización en el gráfico
+plot(shortMA, color=color.blue, title="Media Móvil Corta")
+plot(longMA, color=color.red, title="Media Móvil Larga")
+
+
+
+
+
+
+
+
+
+

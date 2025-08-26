@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Películas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Encabezado y navegación */
+
+    header {
+      background-color: #343a40;
+      padding: 1rem 0;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      margin: 0.5rem;
+      background-color: transparent;
+      border: 2px solid #fdcb6e;
+      color: #fdcb6e;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    nav button:hover {
+      background-color: #fdcb6e;
+      color: #343a40;
+    }
+
+    /* Búsqueda */
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    #search-input {
+      width: 100%;
+      max-width: 300px;
+      margin-right: 0.5rem;
+    }
+
+    /* Filtros */
+
+    .filters-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .filters-container label {
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* Botón de cerrar resultados */
+
+    .close-results {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .close-results.d-none {
+      display: none !important;
+    }
+
+    /* Contenido principal */
+
+    main {
+      padding: 1rem;
+    }
+
+    .movie-card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .movie-card {
+      flex-basis: calc(50% - 20px);
+      padding: 1rem;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      border-radius: 4px;
+      transition: box-shadow 0.3s;
+    }
+
+    .movie-card:hover {
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .movie-title {
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Películas</h1>
+      <nav>
+        <button>Inicio</button>
+        <button>Populares</button>
+        <button>Próximos</button>
+      </nav>
+    </header>
+
+    <main>
+      <div class="movie-card-container">
+        <div class="movie-card">
+          <img src="movie1.jpg" alt="Película 1">
+          <h2 class="movie-title">Película 1</h2>
+        </div>
+        <div class="movie-card">
+          <img src="movie2.jpg" alt="Película 2">
+          <h2 class="movie-title">Película 2</h2>
+        </div>
+        <div class="movie-card">
+          <img src="movie3.jpg" alt="Película 3">
+          <h2 class="movie-title">Película 3</h2>
+        </div>
+        <div class="movie-card">
+          <img src="movie4.jpg" alt="Película 4">
+          <h2 class="movie-title">Película 4</h2>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
